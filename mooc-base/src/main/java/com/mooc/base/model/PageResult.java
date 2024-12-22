@@ -21,4 +21,7 @@ public class PageResult<T> implements Serializable {
 
     //每页记录数
     private long pageSize;
+
+    public PageResult(List<T> items, long total, Long pageNo, Long pageSize) {
+    }
 }
