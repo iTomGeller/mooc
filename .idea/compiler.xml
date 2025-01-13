@@ -8,16 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
       </profile>
-      <profile name="Annotation profile for mooc-base" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
-        </processorPath>
-        <module name="mooc-base" />
-      </profile>
-      <profile name="Annotation profile for mooc-model" enabled="true">
+      <profile name="Annotation profile for mooc-content" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -25,17 +16,11 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
         <module name="mooc-model" />
-      </profile>
-      <profile name="Annotation profile for mooc-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
-        </processorPath>
+        <module name="mooc-content-service" />
+        <module name="mooc-base" />
         <module name="mooc-service" />
       </profile>
-      <profile name="Annotation profile for mooc-content" enabled="true">
+      <profile name="Annotation profile for mooc-content-api" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -53,6 +38,8 @@
       <module name="mooc-base" options="" />
       <module name="mooc-content" options="" />
       <module name="mooc-content-api" options="" />
+      <module name="mooc-content-model" options="" />
+      <module name="mooc-content-service" options="" />
       <module name="mooc-model" options="" />
       <module name="mooc-parent" options="" />
       <module name="mooc-service" options="" />
