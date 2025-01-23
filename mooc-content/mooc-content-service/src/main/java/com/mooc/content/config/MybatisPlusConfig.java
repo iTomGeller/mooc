@@ -8,23 +8,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author TomGeller
- * @version 1.0
- * @description TODO
- * @date 2024-12-22
- * */
+ * MybatisPlus配置
+ */
 @Configuration
 @MapperScan("com.mooc.content.mapper")
 public class MybatisPlusConfig {
- /**
-  * 定义分页拦截器
-  */
- @Bean
- public MybatisPlusInterceptor mybatisPlusInterceptor() {
-  MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-  interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
-  return interceptor;
- }
-
-
+    /**
+     * 定义分页拦截器
+     * @return
+     */
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        return interceptor;
+    }
 }

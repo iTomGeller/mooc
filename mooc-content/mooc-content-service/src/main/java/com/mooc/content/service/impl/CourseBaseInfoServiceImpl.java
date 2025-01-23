@@ -10,6 +10,7 @@ import com.mooc.content.mapper.CourseCategoryMapper;
 import com.mooc.content.mapper.CourseMarketMapper;
 import com.mooc.content.model.dto.AddCourseDto;
 import com.mooc.content.model.dto.CourseBaseInfoDto;
+import com.mooc.content.model.dto.EditCourseDto;
 import com.mooc.content.model.dto.QueryCourseParamsDto;
 import com.mooc.content.model.po.CourseBase;
 import com.mooc.content.model.po.CourseMarket;
@@ -52,7 +53,6 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         //根据课程审核状态查询 course_base.audit_status = ?
         queryWrapper.eq(StringUtils.isNotEmpty(courseParamsDto.getAuditStatus()), CourseBase::getAuditStatus,courseParamsDto.getAuditStatus());
         //todo:按课程发布状态查询
-
         //创建page分页参数对象，参数：当前页码，每页记录数
         Page<CourseBase> page = new Page<>(pageParams.getPageNo(), pageParams.getPageSize());
         //开始进行分页查询
@@ -72,34 +72,34 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     public CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto dto){
 
         //参数的合法性校验
-        if (StringUtils.isBlank(dto.getName())) {
-//            throw new RuntimeException("课程名称为空");
-            moocPlusException.cast("课程名称为空");
-        }
-
-        if (StringUtils.isBlank(dto.getMt())) {
-            throw new RuntimeException("课程分类为空");
-        }
-
-        if (StringUtils.isBlank(dto.getSt())) {
-            throw new RuntimeException("课程分类为空");
-        }
-
-        if (StringUtils.isBlank(dto.getGrade())) {
-            throw new RuntimeException("课程等级为空");
-        }
-
-        if (StringUtils.isBlank(dto.getTeachmode())) {
-            throw new RuntimeException("教育模式为空");
-        }
-
-        if (StringUtils.isBlank(dto.getUsers())) {
-            throw new RuntimeException("适应人群为空");
-        }
-
-        if (StringUtils.isBlank(dto.getCharge())) {
-            throw new RuntimeException("收费规则为空");
-        }
+//        if (StringUtils.isBlank(dto.getName())) {
+////            throw new RuntimeException("课程名称为空");
+//            moocPlusException.cast("课程名称为空");
+//        }
+//
+//        if (StringUtils.isBlank(dto.getMt())) {
+//            throw new RuntimeException("课程分类为空");
+//        }
+//
+//        if (StringUtils.isBlank(dto.getSt())) {
+//            throw new RuntimeException("课程分类为空");
+//        }
+//
+//        if (StringUtils.isBlank(dto.getGrade())) {
+//            throw new RuntimeException("课程等级为空");
+//        }
+//
+//        if (StringUtils.isBlank(dto.getTeachmode())) {
+//            throw new RuntimeException("教育模式为空");
+//        }
+//
+//        if (StringUtils.isBlank(dto.getUsers())) {
+//            throw new RuntimeException("适应人群为空");
+//        }
+//
+//        if (StringUtils.isBlank(dto.getCharge())) {
+//            throw new RuntimeException("收费规则为空");
+//        }
 
         //向课程基本信息表course_base写入数据
         CourseBase courseBaseNew = new CourseBase();
@@ -136,7 +136,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     }
 
     //查询课程信息
-    public CourseBaseInfoDto getCourseBaseInfo(long courseId){
+    public CourseBaseInfoDto getCourseBaseInfo(Long courseId){
 
         //从课程基本信息表查询
         CourseBase courseBase = courseBaseMapper.selectById(courseId);
@@ -160,6 +160,42 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
 
     }
 
+    @Override
+    public CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto editCourseDto) {
+
+        //拿到课程id
+        Long courseId = editCourseDto.getId();
+        //查询课程信息
+        CourseBase courseBase = courseBaseMapper.selectById(courseId);
+        if(courseBase == null){
+            moocPlusException.cast("课程不存在");
+        }
+
+        //数据合法性校验
+        //根据具体的业务逻辑去校验
+        //本机构只能修改本机构的课程
+        if(!companyId.equals(courseBase.getCompanyId())){
+            moocPlusException.cast("本机构只能修改本机构的课程");
+        }
+
+        //封装数据
+        BeanUtils.copyProperties(editCourseDto,courseBase);
+        //修改时间
+        courseBase.setChangeDate(LocalDateTime.now());
+
+        //更新数据库
+        int i = courseBaseMapper.updateById(courseBase);
+        if(i<=0){
+            moocPlusException.cast("修改课程失败");
+        }
+        //更新营销信息
+        //todo:更新营销信息
+        //查询课程信息
+        CourseBaseInfoDto courseBaseInfo = getCourseBaseInfo(courseId);
+
+        return courseBaseInfo;
+    }
+
     //单独写一个方法保存营销信息，逻辑：存在则更新，不存在则添加
     private int saveCourseMarket(CourseMarket courseMarketNew){
 
@@ -170,10 +206,10 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         }
         //如果课程收费，价格没有填写也需要抛出异常
         if(charge.equals("201001")){
-           if(courseMarketNew.getPrice() ==null || courseMarketNew.getPrice().floatValue()<=0){
+            if(courseMarketNew.getPrice() ==null || courseMarketNew.getPrice().floatValue()<=0){
 //               throw new RuntimeException("课程的价格不能为空并且必须大于0");
-               moocPlusException.cast("课程的价格不能为空并且必须大于0");
-           }
+                moocPlusException.cast("课程的价格不能为空并且必须大于0");
+            }
         }
 
         //从数据库查询营销信息,存在则更新，不存在则添加
