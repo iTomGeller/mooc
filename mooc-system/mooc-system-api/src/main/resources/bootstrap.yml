@@ -2,10 +2,18 @@ server:
   servlet:
     context-path: /system
   port: 63110
+
 #微服务配置
 spring:
   application:
     name: system-service
+  cloud:
+    nacos:
+      server-addr: 192.168.101.65:8848
+      discovery:
+        namespace: dev
+        group: xuecheng-plus-project
+
 
 # 日志文件配置路径
 logging:

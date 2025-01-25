@@ -1,5 +1,6 @@
 package com.mooc.content.api;
 
+import com.mooc.content.model.dto.BindTeachplanMediaDto;
 import com.mooc.content.model.dto.SaveTeachplanDto;
 import com.mooc.content.model.dto.TeachplanDto;
 import com.mooc.content.service.TeachplanService;
@@ -38,4 +39,27 @@ public class TeachplanController {
         teachplanService.saveTeachplan(teachplan);
     }
 
+    @ApiOperation("课程计划删除")
+    @DeleteMapping("/teachplan/{teachplanId}")
+    public void deleteTeachplan(@PathVariable Long teachplanId) {
+        teachplanService.deleteTeachplan(teachplanId);
+    }
+
+    @ApiOperation("课程计划排序")
+    @PostMapping("/teachplan/{moveType}/{teachplanId}")
+    public void orderByTeachplan(@PathVariable String moveType, @PathVariable Long teachplanId) {
+        teachplanService.orderByTeachplan(moveType, teachplanId);
+    }
+
+    @ApiOperation(value = "课程计划和媒资信息绑定")
+    @PostMapping("/teachplan/association/media")
+    public void associationMedia(@RequestBody BindTeachplanMediaDto bindTeachplanMediaDto){
+        teachplanService.associationMedia(bindTeachplanMediaDto);
+    }
+
+    @ApiOperation("课程计划解除媒资信息绑定")
+    @DeleteMapping("/teachplan/association/media/{teachPlanId}/{mediaId}")
+    public void unassociationMedia(@PathVariable Long teachPlanId, @PathVariable String mediaId) {
+        teachplanService.unassociationMedia(teachPlanId, mediaId);
+    }
 }

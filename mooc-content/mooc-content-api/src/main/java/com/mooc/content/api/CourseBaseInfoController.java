@@ -9,8 +9,10 @@ import com.mooc.content.model.dto.EditCourseDto;
 import com.mooc.content.model.dto.QueryCourseParamsDto;
 import com.mooc.content.model.po.CourseBase;
 import com.mooc.content.service.CourseBaseInfoService;
+import com.mooc.content.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -65,6 +67,15 @@ public class CourseBaseInfoController {
         return courseBaseInfoDto;
     }
 
-
+    @ApiOperation("删除课程")
+    @DeleteMapping("/course/{courseId}")
+    public void deleteCourse(@PathVariable Long courseId) {
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        Long companyId = null;
+        if (StringUtils.isNotEmpty(user.getCompanyId())) {
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+        courseBaseInfoService.delectCourse(companyId, courseId);
+    }
 
 }
